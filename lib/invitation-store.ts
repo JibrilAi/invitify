@@ -1,3 +1,5 @@
+"use client";
+
 export interface MilestoneItem {
   id: string;
   year: string;
@@ -293,21 +295,52 @@ export function loadStoredConfig(): InvitationConfig {
 }
 
 /**
- * Persists config to localStorage
+ * Persists config to localStorage and immediately syncs to backend API
  */
 export function saveStoredConfig(config: InvitationConfig): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
-    // Trigger custom event for reactive tab sync
     window.dispatchEvent(new CustomEvent("invitation-config-updated", { detail: config }));
+
+    // Sync to backend server
+    fetch("/api/invitation", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(config),
+    }).catch((err) => {
+      console.warn("Backend invitation sync deferred:", err);
+    });
   } catch (e) {
     console.error("Failed to save config:", e);
   }
 }
 
 /**
- * Reset config to original template defaults
+ * Fetches config from backend server and updates local store
+ */
+export async function fetchServerConfig(): Promise<InvitationConfig> {
+  if (typeof window === "undefined") return DEFAULT_INVITATION_CONFIG;
+  try {
+    const res = await fetch("/api/invitation");
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.config) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data.config));
+        window.dispatchEvent(
+          new CustomEvent("invitation-config-updated", { detail: data.config })
+        );
+        return data.config;
+      }
+    }
+  } catch (err) {
+    console.warn("Could not fetch server config, using local:", err);
+  }
+  return loadStoredConfig();
+}
+
+/**
+ * Reset config to original template defaults and sync to backend
  */
 export function resetConfig(): InvitationConfig {
   if (typeof window !== "undefined") {
@@ -316,6 +349,11 @@ export function resetConfig(): InvitationConfig {
       window.dispatchEvent(
         new CustomEvent("invitation-config-updated", { detail: DEFAULT_INVITATION_CONFIG })
       );
+      fetch("/api/invitation", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(DEFAULT_INVITATION_CONFIG),
+      }).catch(console.error);
     } catch (e) {
       console.error(e);
     }
@@ -349,9 +387,70 @@ export function setHostAuthenticated(auth: boolean): void {
   }
 }
 
+export async function loginHost(params: {
+  passcode?: string;
+  email?: string;
+  password?: string;
+  quickAccess?: boolean;
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(params),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.success) {
+      setHostAuthenticated(true);
+      return { success: true };
+    }
+    return {
+      success: false,
+      error: data.error || "Login failed. Please check credentials.",
+    };
+  } catch {
+    // If offline, check local passcode fallback
+    if (params.passcode && verifyHostPasscode(params.passcode)) {
+      setHostAuthenticated(true);
+      return { success: true };
+    }
+    if (params.quickAccess) {
+      setHostAuthenticated(true);
+      return { success: true };
+    }
+    return { success: false, error: "Network error during login" };
+  }
+}
+
+export async function logoutHost(): Promise<void> {
+  try {
+    await fetch("/api/auth/logout", { method: "POST" });
+  } catch (err) {
+    console.warn("Backend logout failed:", err);
+  } finally {
+    setHostAuthenticated(false);
+  }
+}
+
+export async function checkHostSession(): Promise<boolean> {
+  try {
+    const res = await fetch("/api/auth/session");
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.authenticated) {
+        setHostAuthenticated(true);
+        return true;
+      }
+    }
+  } catch {
+    // ignore
+  }
+  return isHostAuthenticated();
+}
+
 export function verifyHostPasscode(passcode: string): boolean {
   const normalized = passcode.trim().toLowerCase();
-  // Allow simple convenient host passcodes: "admin", "1234", "inviti", "mikha", "clara"
+  // Allow simple convenient host passcodes: "admin", "1234", "inviti", "mikha", "clara", "wedding"
   return (
     normalized === "admin" ||
     normalized === "1234" ||
@@ -376,10 +475,15 @@ function subscribeConfig(callback: () => void) {
 
 let cachedConfig: InvitationConfig = DEFAULT_INVITATION_CONFIG;
 let cachedConfigRaw: string | null = null;
+let hasInitiatedServerFetch = false;
 
 function getConfigSnapshot(): InvitationConfig {
   if (typeof window === "undefined") return DEFAULT_INVITATION_CONFIG;
   try {
+    if (!hasInitiatedServerFetch) {
+      hasInitiatedServerFetch = true;
+      fetchServerConfig();
+    }
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw !== cachedConfigRaw) {
       cachedConfigRaw = raw;
@@ -427,4 +531,5 @@ export function useHostAuth(): [boolean, (auth: boolean) => void] {
   const isAuth = useSyncExternalStore(subscribeAuth, getAuthSnapshot, getServerAuthSnapshot);
   return [isAuth, setHostAuthenticated];
 }
+
 

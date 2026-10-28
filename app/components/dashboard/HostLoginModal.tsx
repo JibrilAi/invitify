@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Lock, KeyRound, Sparkles, X, Check, AlertCircle } from "lucide-react";
-import { verifyHostPasscode, setHostAuthenticated } from "@/lib/invitation-store";
+import { loginHost } from "@/lib/invitation-store";
 
 interface HostLoginModalProps {
   isOpen: boolean;
@@ -13,25 +13,34 @@ interface HostLoginModalProps {
 export default function HostLoginModal({ isOpen, onClose, onSuccess }: HostLoginModalProps) {
   const [passcode, setPasscode] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!passcode.trim()) return;
     setError(null);
-    if (verifyHostPasscode(passcode)) {
-      setHostAuthenticated(true);
+    setIsLoading(true);
+    const result = await loginHost({ passcode });
+    setIsLoading(false);
+    if (result.success) {
       onSuccess();
       onClose();
     } else {
-      setError("Incorrect passcode. Try 'admin', '1234', or 'inviti'.");
+      setError(result.error || "Incorrect passcode. Try 'admin', '1234', or 'inviti'.");
     }
   };
 
-  const handleQuickDemoLogin = () => {
-    setHostAuthenticated(true);
-    onSuccess();
-    onClose();
+  const handleQuickDemoLogin = async () => {
+    setError(null);
+    setIsLoading(true);
+    const result = await loginHost({ quickAccess: true });
+    setIsLoading(false);
+    if (result.success) {
+      onSuccess();
+      onClose();
+    }
   };
 
   return (
@@ -129,10 +138,11 @@ export default function HostLoginModal({ isOpen, onClose, onSuccess }: HostLogin
           <div className="flex gap-2">
             <button
               type="submit"
-              className="flex-1 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-white/10 hover:bg-white/20 text-white border border-white/20 transition flex items-center justify-center gap-1.5"
+              disabled={isLoading}
+              className="flex-1 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-white/10 hover:bg-white/20 text-white border border-white/20 transition flex items-center justify-center gap-1.5 disabled:opacity-50"
             >
               <Check className="w-4 h-4 text-emerald-400" />
-              <span>Login with Code</span>
+              <span>{isLoading ? "Verifying..." : "Login with Code"}</span>
             </button>
             <button
               type="button"

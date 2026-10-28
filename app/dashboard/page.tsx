@@ -5,6 +5,9 @@ import {
   InvitationConfig,
   useInvitationConfig,
   useHostAuth,
+  checkHostSession,
+  logoutHost,
+  fetchServerConfig,
 } from "@/lib/invitation-store";
 import HostDashboard from "../components/dashboard/HostDashboard";
 import HostTopBar, { AppDisplayMode } from "../components/dashboard/HostTopBar";
@@ -19,15 +22,19 @@ export default function DashboardPage() {
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   useEffect(() => {
-    // When directly navigating to /dashboard, grant host access by default for convenience
-    setIsAuthenticated(true);
-  }, [setIsAuthenticated]);
+    // Check server session and refresh config from backend
+    checkHostSession();
+    fetchServerConfig().then((serverConfig) => {
+      if (serverConfig) setConfig(serverConfig);
+    });
+  }, [setConfig]);
 
   const handleConfigChange = (newConfig: InvitationConfig) => {
     setConfig(newConfig);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await logoutHost();
     setIsAuthenticated(false);
     setDisplayMode("guest");
   };

@@ -41,6 +41,10 @@ const Form = () => {
       if (response.ok) {
         form.reset();
         setStatusMessage({ type: "success", text: "RSVP submitted successfully! Thank you." });
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("rsvp-updated"));
+          window.dispatchEvent(new CustomEvent("wishes-updated"));
+        }
       } else {
         setStatusMessage({ type: "error", text: "Failed to submit RSVP. Please try again." });
       }

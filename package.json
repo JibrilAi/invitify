@@ -6,7 +6,8 @@
     "dev": "next dev -p 3000 -H 0.0.0.0",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "node --test test/http-backend.test.mjs test/invitation-store.test.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.62.0",

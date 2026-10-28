@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getWishes } from "@/lib/wishesStore";
+import { getStoredWishes } from "@/lib/server-store";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -7,7 +7,7 @@ export async function GET(req: Request) {
   const limit = parseInt(searchParams.get("limit") || "5", 10);
 
   try {
-    const result = await getWishes(page, limit);
+    const result = getStoredWishes(page, limit);
     return NextResponse.json(result);
   } catch (error) {
     console.error("Error fetching wishes:", error);

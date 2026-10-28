@@ -173,9 +173,23 @@ export default function RsvpComponent({
       // Persist in localStorage
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedRecords));
+        window.dispatchEvent(new CustomEvent("rsvp-updated", { detail: updatedRecords }));
       } catch {
         // Fallback gracefully
       }
+
+      // Sync to real backend API
+      fetch("/api/rsvps", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          guestName: newSubmission.guestName,
+          attendanceStatus: newSubmission.attendanceStatus,
+          numberOfAttendees: newSubmission.numberOfAttendees,
+        }),
+      }).catch((err) => {
+        console.warn("Backend RSVP sync deferred:", err);
+      });
 
       setIsSubmitting(false);
 

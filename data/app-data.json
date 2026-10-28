@@ -1,0 +1,301 @@
+{
+  "invitation": {
+    "coupleNames": "Mikha & Clara",
+    "eventDate": "2026-12-21T10:00:00",
+    "theme": "midnight",
+    "groom": {
+      "name": "Mikha Satria Sihotang",
+      "nickName": "Mikha",
+      "bio": "Architect and adventurer who found a lifelong love and companion in Clara.",
+      "instagram": "mikhasatria",
+      "photo": "/foto_3.jpg"
+    },
+    "bride": {
+      "name": "Clara Sagala",
+      "nickName": "Clara",
+      "bio": "Designer and writer who found her soulmate and forever partner in Mikha.",
+      "instagram": "clarasagala",
+      "photo": "/foto_1.jpg"
+    },
+    "sacredVerse": {
+      "reference": "1 Corinthians 13:4-7",
+      "quote": "Love is patient, love is kind. It does not envy, it does not boast, it is not proud. It always protects, always trusts, always hopes, always perseveres."
+    },
+    "story": {
+      "items": [
+        {
+          "id": "story-1",
+          "year": "2021 — First Met",
+          "title": "The First Coffee",
+          "content": "A serendipitous meeting over warm morning coffee that sparked endless laughter and deep conversation."
+        },
+        {
+          "id": "story-2",
+          "year": "2023 — The Journey",
+          "title": "Growing Together",
+          "content": "Years of sharing adventures, supporting each other's dreams, and discovering that home is wherever we are together."
+        },
+        {
+          "id": "story-3",
+          "year": "2025 — She Said Yes",
+          "title": "Forever Begins",
+          "content": "Under a canopy of stars, with hearts overflowing with certainty, we promised to walk hand in hand forever."
+        }
+      ]
+    },
+    "venues": {
+      "holyMatrimony": {
+        "enabled": true,
+        "time": "09:00 AM - 11:00 AM",
+        "place": "Cathedral of St. Mary",
+        "place_details": "Jl. Katedral No. 7, Jakarta Pusat",
+        "googleMapsLink": "https://maps.app.goo.gl/vPmfWux29qYYfkJTA"
+      },
+      "weddingReception": {
+        "enabled": true,
+        "time": "06:00 PM - 09:00 PM",
+        "place": "Grand Ballroom Hotel",
+        "place_details": "Jl. Jend. Sudirman Kav. 1, Jakarta",
+        "googleMapsLink": "https://maps.app.goo.gl/fQGiC37iEx6fcuNq8"
+      },
+      "livestream": {
+        "enabled": true,
+        "time": "09:00 AM WIB",
+        "link": "https://youtube.com",
+        "detail": "For family and friends joining us from around the world, watch our holy matrimony ceremony live broadcast."
+      }
+    },
+    "dressCode": {
+      "note": "We invite our lovely guests to wear formal or cocktail attire inspired by our wedding color palette:",
+      "colors": [
+        {
+          "name": "Champagne",
+          "hex": "#E8D8C8"
+        },
+        {
+          "name": "Terracotta",
+          "hex": "#C87D65"
+        },
+        {
+          "name": "Emerald Pine",
+          "hex": "#2C4A3E"
+        },
+        {
+          "name": "Midnight Noir",
+          "hex": "#1C1C1C"
+        }
+      ]
+    },
+    "digitalEnvelope": {
+      "note": "Your prayers and blessings are our greatest gift. For those wishing to send a token of love, you may transfer directly below:",
+      "accounts": [
+        {
+          "id": "bca-1",
+          "bankName": "BANK BCA",
+          "accountNumber": "8415-0921-33",
+          "accountHolder": "Mikha Satria Sihotang"
+        },
+        {
+          "id": "mandiri-1",
+          "bankName": "BANK MANDIRI",
+          "accountNumber": "132-00-98412-1",
+          "accountHolder": "Clara Sagala"
+        }
+      ],
+      "qrNotice": "Scan using any banking app or e-wallet (BCA, Mandiri, GoPay, OVO, Dana, QRIS)."
+    },
+    "features": {
+      "rsvp": true,
+      "music": true,
+      "story": true,
+      "events": true,
+      "countdown": true,
+      "dressCode": true,
+      "digitalEnvelope": true,
+      "songRequest": true,
+      "guestbook": true,
+      "coupleProfiles": true,
+      "sacredVerse": true,
+      "livestream": true,
+      "storiesMode": true
+    },
+    "thankYou": {
+      "headline": "Thank You",
+      "message": "Your love, prayers, and presence make our wedding day truly unforgettable. With all our love."
+    }
+  },
+  "rsvps": [
+    {
+      "id": "rsvp-1793202451602-8m8f8",
+      "guestName": "Guest-1793202451547",
+      "attendanceStatus": "Yes",
+      "numberOfAttendees": 2,
+      "createdAt": "2026-10-28T15:47:31.602Z"
+    },
+    {
+      "id": "rsvp-1793202439217-idhz8",
+      "guestName": "Guest-1793202439191",
+      "attendanceStatus": "Yes",
+      "numberOfAttendees": 2,
+      "createdAt": "2026-10-28T15:47:19.217Z"
+    },
+    {
+      "id": "rsvp-1793202131464-pd89v",
+      "guestName": "Charlotte & Henry",
+      "attendanceStatus": "Yes",
+      "numberOfAttendees": 2,
+      "createdAt": "2026-10-28T15:42:11.464Z"
+    },
+    {
+      "id": "rsvp-1",
+      "guestName": "Alexander Hamilton & Elizabeth",
+      "attendanceStatus": "Yes",
+      "numberOfAttendees": 2,
+      "createdAt": "2026-10-26T15:40:49.114Z"
+    },
+    {
+      "id": "rsvp-2",
+      "guestName": "David Jonathan",
+      "attendanceStatus": "Yes",
+      "numberOfAttendees": 1,
+      "createdAt": "2026-10-27T15:40:49.116Z"
+    },
+    {
+      "id": "rsvp-3",
+      "guestName": "Amanda Valerie",
+      "attendanceStatus": "No",
+      "numberOfAttendees": 0,
+      "createdAt": "2026-10-28T03:40:49.116Z"
+    },
+    {
+      "id": "rsvp-4",
+      "guestName": "Budi Santoso & Partner",
+      "attendanceStatus": "Yes",
+      "numberOfAttendees": 2,
+      "createdAt": "2026-10-28T11:40:49.116Z"
+    }
+  ],
+  "wishes": [
+    {
+      "_id": "wish-1793202131464-jg3qn",
+      "name": "Charlotte & Henry",
+      "attendance": "Hadir",
+      "guests": 2,
+      "message": "So happy for you both!",
+      "createdAt": "2026-10-28T15:42:11.464Z"
+    },
+    {
+      "_id": "wish-1",
+      "name": "Jonathan & Sarah",
+      "attendance": "Hadir",
+      "guests": 2,
+      "message": "Wishing you both a lifetime of love and happiness! Congratulations on your special day!",
+      "createdAt": "2026-10-26T15:40:49.116Z"
+    },
+    {
+      "_id": "wish-2",
+      "name": "Michael Chen",
+      "attendance": "Hadir",
+      "guests": 1,
+      "message": "Warmest congratulations to the lovely couple! So excited to celebrate with you.",
+      "createdAt": "2026-10-27T15:40:49.116Z"
+    },
+    {
+      "_id": "wish-3",
+      "name": "Amanda Valerie",
+      "attendance": "Tidak Hadir",
+      "guests": 1,
+      "message": "Sending my heartfelt congratulations from afar! May your marriage be abundantly blessed.",
+      "createdAt": "2026-10-28T03:40:49.116Z"
+    },
+    {
+      "_id": "wish-4",
+      "name": "Budi Santoso",
+      "attendance": "Hadir",
+      "guests": 2,
+      "message": "Selamat menempuh hidup baru Mikha & Clara! Bahagia dan langgeng selalu sampai kakek nenek.",
+      "createdAt": "2026-10-28T11:40:49.116Z"
+    }
+  ],
+  "songs": [
+    {
+      "id": "song-1793202049142-7hzcf",
+      "title": "Perfect",
+      "artist": "Ed Sheeran",
+      "requestedBy": "Test Guest",
+      "createdAt": "2026-10-28T15:40:49.142Z"
+    },
+    {
+      "id": "song-1",
+      "title": "Can't Help Falling in Love",
+      "artist": "Kina Grannis",
+      "requestedBy": "Sarah",
+      "createdAt": "2026-10-27T09:40:49.116Z"
+    },
+    {
+      "id": "song-2",
+      "title": "A Thousand Years",
+      "artist": "Christina Perri",
+      "requestedBy": "Michael",
+      "createdAt": "2026-10-27T21:40:49.116Z"
+    }
+  ],
+  "guests": [
+    {
+      "id": "guest-1793202049142-sxt2l",
+      "name": "Uncle Raymond",
+      "slug": "uncle-raymond",
+      "seats": 2,
+      "link": "/to/uncle-raymond",
+      "createdAt": "2026-10-28T15:40:49.142Z"
+    },
+    {
+      "id": "guest-1",
+      "name": "Alexander Hamilton",
+      "slug": "alexander-hamilton",
+      "phone": "+62 812 3456 7890",
+      "seats": 2,
+      "customNote": "VIP Table 1",
+      "link": "/to/alexander-hamilton",
+      "createdAt": "2026-10-28T15:40:49.116Z"
+    },
+    {
+      "id": "guest-2",
+      "name": "David Jonathan",
+      "slug": "david-jonathan",
+      "phone": "+62 813 9876 5432",
+      "seats": 1,
+      "customNote": "Groom's Highschool Friend",
+      "link": "/to/david-jonathan",
+      "createdAt": "2026-10-28T15:40:49.116Z"
+    },
+    {
+      "id": "guest-3",
+      "name": "Amanda Valerie",
+      "slug": "amanda-valerie",
+      "phone": "+62 815 1122 3344",
+      "seats": 1,
+      "customNote": "Bride's Colleague",
+      "link": "/to/amanda-valerie",
+      "createdAt": "2026-10-28T15:40:49.116Z"
+    }
+  ],
+  "activeSessions": {
+    "inviti_sess_1793202116391_b2olbfdu": {
+      "role": "host",
+      "createdAt": "2026-10-28T15:41:56.391Z"
+    },
+    "inviti_sess_1793202166900_iwgp6ruv": {
+      "role": "host",
+      "createdAt": "2026-10-28T15:42:46.900Z"
+    },
+    "inviti_sess_1793202439116_2agvtttq": {
+      "role": "host",
+      "createdAt": "2026-10-28T15:47:19.116Z"
+    },
+    "inviti_sess_1793202451532_gfz3vx6v": {
+      "role": "host",
+      "createdAt": "2026-10-28T15:47:31.532Z"
+    }
+  }
+}

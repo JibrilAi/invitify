@@ -70,6 +70,40 @@ export default function GuestManagerTab() {
   const [addStatus, setAddStatus] = useState<"Yes" | "No">("Yes");
   const [addAttendees, setAddAttendees] = useState(1);
 
+  useEffect(() => {
+    let isMounted = true;
+    fetch("/api/rsvps")
+      .then((res) => res.json())
+      .then((data) => {
+        if (isMounted && data && Array.isArray(data.submissions)) {
+          setSubmissions(data.submissions);
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data.submissions));
+        }
+      })
+      .catch((err) => {
+        console.warn("Using local RSVPs:", err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const refreshBackendRsvps = async () => {
+    try {
+      const res = await fetch("/api/rsvps");
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.submissions)) {
+          setSubmissions(data.submissions);
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data.submissions));
+        }
+      }
+    } catch {
+      // ignore
+    }
+  };
+
   // Listen to external rsvp updates
   useEffect(() => {
     const handleUpdate = (e: Event) => {
@@ -92,19 +126,25 @@ export default function GuestManagerTab() {
     }
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     const updated = submissions.filter((s) => s.id !== id);
     saveList(updated);
+    try {
+      await fetch(`/api/rsvps?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+    } catch (err) {
+      console.warn("Failed to delete RSVP from backend:", err);
+    }
   };
 
-  const handleManualAdd = (e: React.FormEvent) => {
+  const handleManualAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!addName.trim()) return;
 
+    const attendees = addStatus === "Yes" ? Number(addAttendees) : 0;
     const newRec = createRsvpSubmission({
       guestName: addName.trim(),
       attendanceStatus: addStatus,
-      numberOfAttendees: addStatus === "Yes" ? Number(addAttendees) : 0,
+      numberOfAttendees: attendees,
     });
 
     const updated = storeRsvpLocally(newRec, submissions);
@@ -112,6 +152,23 @@ export default function GuestManagerTab() {
     setAddName("");
     setAddAttendees(1);
     setShowAddModal(false);
+
+    try {
+      const res = await fetch("/api/rsvps", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          guestName: newRec.guestName,
+          attendanceStatus: newRec.attendanceStatus,
+          numberOfAttendees: newRec.numberOfAttendees,
+        }),
+      });
+      if (res.ok) {
+        refreshBackendRsvps();
+      }
+    } catch (err) {
+      console.warn("Failed to save RSVP to backend:", err);
+    }
   };
 
   const handleExportCsv = () => {
