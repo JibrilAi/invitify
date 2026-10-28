@@ -2,10 +2,12 @@ import React, { useState } from "react";
 
 const Form = () => {
   const [loading, setLoading] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    setStatusMessage(null);
 
     const form = e.currentTarget;
     if (!form) {
@@ -21,34 +23,48 @@ const Form = () => {
       message: formData.get("message"),
     };
 
-
     if (!data.name || !data.attendance || !data.guests || !data.message) {
-      alert("All fields are required!");
-      setLoading(false); 
+      setStatusMessage({ type: "error", text: "All fields are required!" });
+      setLoading(false);
       return;
     }
 
-    const response = await fetch("/api/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    try {
+      const response = await fetch("/api/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-    if (response.ok) {
-      // Reset the form if submission is successful
-      form.reset();
-      alert("RSVP submitted successfully!");
-    } else {
-      alert("Failed to submit RSVP");
+      if (response.ok) {
+        form.reset();
+        setStatusMessage({ type: "success", text: "RSVP submitted successfully! Thank you." });
+      } else {
+        setStatusMessage({ type: "error", text: "Failed to submit RSVP. Please try again." });
+      }
+    } catch {
+      setStatusMessage({ type: "error", text: "Network error occurred. Please try again." });
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false); // Set loading to false after response
   };
 
   return (
     <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+      {statusMessage && (
+        <div
+          className={`p-3 rounded-md text-sm text-center ${
+            statusMessage.type === "success"
+              ? "bg-emerald-900/60 border border-emerald-500 text-emerald-200"
+              : "bg-red-900/60 border border-red-500 text-red-200"
+          }`}
+        >
+          {statusMessage.text}
+        </div>
+      )}
+
       {/* Form fields */}
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-white">
@@ -122,10 +138,10 @@ const Form = () => {
       <div>
         <button
           type="submit"
-          className="block w-full p-2 text-sm font-medium text-center text-black bg-white border border-transparent rounded-md shadow-xs"
-          disabled={loading} 
+          className="block w-full p-2 text-sm font-medium text-center text-black bg-white border border-transparent rounded-md shadow-xs hover:bg-gray-200 transition"
+          disabled={loading}
         >
-          {loading ? "Submitting..." : "Submit"} 
+          {loading ? "Submitting..." : "Submit"}
         </button>
       </div>
     </form>

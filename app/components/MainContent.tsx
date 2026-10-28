@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useInView } from "react-intersection-observer";
 import CountdownTimer from "./Countdown";
 import Form from "./Form";
-import WishesList from "./WishesList";
+import Guestbook from "./Guestbook";
 import { config } from "@/lib/config";
 
 type WeddingScreenProps = {
@@ -15,86 +15,100 @@ type WeddingScreenProps = {
 };
 
 const WeddingScreen = ({ name }: WeddingScreenProps) => {
-  const [fadeClass, setFadeClass] = useState("opacity-0");
   const [isOpen, setIsOpen] = useState(false);
   const audioRef = useRef(null);
 
-  // Untuk fade-in pertama kali
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setFadeClass("opacity-100");
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
   const handleOpen = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => !prev);
     if (!isOpen && audioRef.current) {
-      // Play music when "Open" is clicked
-      (audioRef.current as HTMLAudioElement).play();
+      try {
+        const audio = audioRef.current as HTMLAudioElement;
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((e) => {
+            console.log("Audio autoplay prevented by browser:", e);
+          });
+        }
+      } catch (err) {
+        console.log("Audio play error:", err);
+      }
     }
   };
 
   const { ref: mainRef, inView: isMainInView } = useInView({
-    threshold: 0.5,
+    threshold: 0.1,
+    initialInView: true,
   });
 
   const { ref: main2Ref, inView: isMain2InView } = useInView({
-    threshold: 0.5,
+    threshold: 0.1,
+    initialInView: true,
   });
 
   const { ref: slide1Ref, inView: isSlide1InView } = useInView({
-    threshold: 0.5,
+    threshold: 0.1,
+    initialInView: true,
   });
 
   const { ref: slide2Ref, inView: isSlide2InView } = useInView({
-    threshold: 0.5,
+    threshold: 0.1,
+    initialInView: true,
   });
 
   const { ref: slide3Ref, inView: isSlide3InView } = useInView({
-    threshold: 0.5,
+    threshold: 0.1,
+    initialInView: true,
   });
 
   const { ref: slide4Ref, inView: isSlide4InView } = useInView({
-    threshold: 0.5,
+    threshold: 0.1,
+    initialInView: true,
   });
   const { ref: slide5Ref, inView: isSlide5InView } = useInView({
-    threshold: 0.5,
+    threshold: 0.1,
+    initialInView: true,
   });
   const { ref: slide6Ref, inView: isSlide6InView } = useInView({
-    threshold: 0.5,
+    threshold: 0.1,
+    initialInView: true,
   });
   const { ref: slide7Ref, inView: isSlide7InView } = useInView({
-    threshold: 0.5,
+    threshold: 0.1,
+    initialInView: true,
   });
   const { ref: slide8Ref, inView: isSlide8InView } = useInView({
-    threshold: 0.5,
+    threshold: 0.1,
+    initialInView: true,
   });
   const { ref: slide9Ref, inView: isSlide9InView } = useInView({
-    threshold: 0.5,
+    threshold: 0.1,
+    initialInView: true,
   });
   const { ref: slide10Ref, inView: isSlide10InView } = useInView({
-    threshold: 0.5,
+    threshold: 0.1,
+    initialInView: true,
   });
   const { ref: endRef, inView: isEndInView } = useInView({
-    threshold: 0.5,
+    threshold: 0.1,
+    initialInView: true,
   });
 
   useEffect(() => {
     const video = document.querySelector("iframe");
     if (video) {
       if (isSlide8InView) {
-        video.src += "&autoplay=1"; // Mulai video
+        if (!video.src.includes("&autoplay=1")) {
+          video.src += "&autoplay=1";
+        }
       } else {
-        video.src = video.src.replace("&autoplay=1", ""); // Hentikan video
+        video.src = video.src.replace("&autoplay=1", "");
       }
     }
   }, [isSlide8InView]);
 
   return (
     <div
-      className={`h-screen w-screen flex flex-col md:flex-row ${fadeClass} transition-opacity duration-1000`}
+      className="h-screen w-screen flex flex-col md:flex-row opacity-100 transition-opacity duration-700"
     >
       {/* Gambar sisi kiri Wide Untuk Komputer */}
       <div
@@ -516,9 +530,9 @@ const WeddingScreen = ({ name }: WeddingScreenProps) => {
             </div>
             )}
 
-            {/* SLIDE 10 */}
+            {/* SLIDE 10: GUESTBOOK */}
             <div
-              className="snap-start text-white h-screen flex flex-col justify-center pt-16 pb-16 px-8"
+              className="snap-start text-white h-screen flex flex-col justify-center py-8 px-4 sm:px-8 overflow-y-auto"
               style={{
                 backgroundImage: `url(/slide_9.jpg)`,
                 backgroundSize: "cover",
@@ -527,12 +541,9 @@ const WeddingScreen = ({ name }: WeddingScreenProps) => {
             >
               <div
                 ref={slide10Ref}
-                className={`${isSlide10InView ? "active" : ""} fadeInMove`}
+                className={`${isSlide10InView ? "active" : ""} fadeInMove w-full flex flex-col items-center`}
               >
-                <h1 className="text-3xl text-white font-ovo text-center uppercase">
-                  Wishes
-                </h1>
-                <WishesList />
+                <Guestbook />
               </div>
             </div>
 
